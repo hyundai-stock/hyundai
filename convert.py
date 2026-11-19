@@ -9,8 +9,7 @@
 import sys, os, re, json, datetime, collections
 import openpyxl
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-OUT = os.path.join(ROOT, "data.json")
+OUT = os.path.join(os.getcwd(), "data.json")   # 저장소 맨 위 폴더에서 실행
 KST = datetime.timezone(datetime.timedelta(hours=9))
 
 # 시트 이름 → 화면에 보일 차종명 (오타·줄임말 보정)
