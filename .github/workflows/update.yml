@@ -36,7 +36,8 @@ jobs:
             exit 0
           fi
           pip install -q openpyxl
-          python tools/convert.py "${files[@]}"
+          CONV=tools/convert.py; [ -f "$CONV" ] || CONV=convert.py
+          python "$CONV" "${files[@]}"
           git config user.name  "stock-bot"
           git config user.email "stock-bot@users.noreply.github.com"
           git rm -q -- "${files[@]}"
@@ -48,6 +49,7 @@ jobs:
         run: |
           mkdir -p _site
           cp index.html data.json _site/
+          [ -f napgi.json ] && cp napgi.json _site/ || true
           [ -f og.png ] && cp og.png _site/ || true
           touch _site/.nojekyll
 
