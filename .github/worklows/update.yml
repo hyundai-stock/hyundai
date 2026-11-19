@@ -1,0 +1,59 @@
+name: 재고 업데이트 & 사이트 배포
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  update-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 업로드된 엑셀 → data.json 변환
+        run: |
+          shopt -s nullglob nocaseglob
+          files=(upload/*.xlsx)
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "새로 올라온 엑셀이 없습니다. (사이트만 다시 배포)"
+            exit 0
+          fi
+          pip install -q openpyxl
+          python tools/convert.py "${files[@]}"
+          git config user.name  "stock-bot"
+          git config user.email "stock-bot@users.noreply.github.com"
+          git rm -q -- "${files[@]}"
+          git add data.json
+          git commit -m "재고 업데이트 $(TZ=Asia/Seoul date '+%Y-%m-%d %H:%M')"
+          git push
+
+      - name: 사이트 파일 준비
+        run: |
+          mkdir -p _site
+          cp index.html data.json _site/
+          [ -f og.png ] && cp og.png _site/ || true
+          touch _site/.nojekyll
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deploy
+        uses: actions/deploy-pages@v4
