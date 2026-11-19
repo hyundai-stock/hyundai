@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>현대 · 제네시스 재고조회</title>
+<meta name="description" content="현대·제네시스 즉시출고 · 할인재고를 한 번에 검색하세요.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="현대 · 제네시스 재고조회">
+<meta property="og:description" content="즉시출고 · 할인재고 한 번에 · 매일 업데이트">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
+<script>
+/* ============================================================
+   ▼▼▼ 여기만 고치면 됩니다 (대리점 정보) ▼▼▼
+   - phone : 전화번호. 비워두면 전화 버튼이 숨겨집니다.
+   - kakao : 카카오톡 오픈채팅/채널 주소. 비워두면 숨겨집니다.
+   ============================================================ */
+window.CONFIG = {
+  title:  "현대 재고조회",
+  sub:    "즉시출고 · 할인재고 한 번에",
+  phone:  "",          // 예) "010-1234-5678"
+  kakao:  ""           // 예) "https://open.kakao.com/o/xxxxxx"
+};
+</script>
+<style>
+:root{
+  --ink:#0d1b2a; --ink2:#4b5a69; --ink3:#8c98a4; --line:#e2e7ed; --bg:#f2f4f7; --card:#fff;
+  --navy:#002c5f; --sky:#00aad2; --now:#0f9d58; --sale:#e4572e; --gold:#a07b4f;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--ink);font-family:'Noto Sans KR',system-ui,-apple-system,sans-serif;-webkit-text-size-adjust:100%}
+button,input,select{font:inherit;color:inherit}
+.wrap{max-width:880px;margin:0 auto;padding:0 14px}
+.top{position:sticky;top:0;z-index:20;background:var(--navy);color:#fff;box-shadow:0 2px 12px rgba(0,0,0,.18)}
+.hd{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0 8px}
+.hd h1{font-size:17px;font-weight:800;letter-spacing:-.3px;display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.hd h1 small{flex-basis:100%;font-size:11px;font-weight:500;color:#a9c0d8;letter-spacing:0}
+.pill{font-size:12px;font-weight:700;border-radius:999px;padding:3px 10px;text-decoration:none;letter-spacing:0}
+.pill.tel{background:#fff;color:var(--navy)}
+.pill.kko{background:#fee500;color:#191919}
+.upd{font-size:11px;color:#a9c0d8;text-align:right;line-height:1.4;flex:none}
+.upd b{color:#fff;font-weight:700}
+.tabs{display:flex;gap:6px;padding-bottom:10px}
+.tab{flex:1;border:0;border-radius:10px;padding:9px 4px;background:rgba(255,255,255,.09);color:#c6d5e4;font-size:14px;font-weight:700;cursor:pointer;line-height:1.25}
+.tab span{display:block;font-size:11px;font-weight:500;opacity:.85}
+.tab.on{background:#fff;color:var(--navy)}
+.tab.on[data-k=now]{box-shadow:inset 0 -3px 0 var(--now)}
+.tab.on[data-k=sale]{box-shadow:inset 0 -3px 0 var(--sale)}
+.bar{background:#fff;border-bottom:1px solid var(--line)}
+.search{display:flex;gap:8px;padding:10px 0 8px}
+.search input{flex:1;min-width:0;border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;font-size:15px;background:#f8fafc;outline:none}
+.search input:focus{border-color:var(--sky);background:#fff}
+.clr{border:0;background:#eef2f6;border-radius:10px;padding:0 13px;font-size:13px;color:var(--ink2);cursor:pointer;white-space:nowrap}
+.brand{display:flex;gap:6px;padding-bottom:7px}
+.brand button{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:4px 12px;font-size:12.5px;font-weight:700;color:var(--ink2);cursor:pointer}
+.brand button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.chips{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding-bottom:8px}
+@media(min-width:560px){.chips{grid-template-columns:repeat(6,1fr)}}
+@media(min-width:760px){.chips{grid-template-columns:repeat(8,1fr)}}
+.chip{border:1.5px solid var(--line);background:#fff;border-radius:9px;padding:5px 2px;font-size:13px;font-weight:700;color:var(--ink2);cursor:pointer;white-space:nowrap;line-height:1.2;text-align:center;overflow:hidden;text-overflow:ellipsis}
+.chip em{display:block;font-style:normal;font-weight:500;color:var(--ink3);font-size:11px}
+.chip.gn{border-color:#e6dccd;color:#6d5232}
+.chip.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.chip.gn.on{background:#1c1c1c;border-color:#1c1c1c}
+.chip.on em{color:#a9c0d8}
+.filters{display:flex;gap:6px;padding-bottom:10px}
+.filters select{flex:1;min-width:0;border:1.5px solid var(--line);border-radius:9px;padding:7px 8px;font-size:13px;background:#fff;color:var(--ink2)}
+.keyf{display:none;align-items:center;justify-content:space-between;gap:8px;background:#fff1ec;border:1px solid #f6c4b3;color:#9b3415;border-radius:9px;padding:7px 10px;font-size:12.5px;font-weight:700;margin-bottom:10px}
+.keyf.show{display:flex}
+.keyf button{border:0;background:#fff;border-radius:7px;padding:3px 9px;font-weight:700;color:#9b3415;cursor:pointer}
+.sum{font-size:13px;color:var(--ink2);padding:12px 2px 8px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.sum b{color:var(--ink);font-size:15px}
+.list{display:grid;gap:10px;padding-bottom:20px}
+@media(min-width:720px){.list{grid-template-columns:1fr 1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 14px 12px;display:flex;flex-direction:column;gap:8px}
+.r1{display:flex;align-items:flex-start;gap:8px}
+.model{font-size:12px;font-weight:800;color:#fff;background:var(--navy);border-radius:6px;padding:2px 7px;flex:none}
+.model.gn{background:#1c1c1c;color:#e4cfa8}
+.trim{font-size:14.5px;font-weight:700;line-height:1.35;letter-spacing:-.2px;flex:1}
+.qty{flex:none;font-size:12px;font-weight:800;color:var(--now);background:#e6f6ee;border-radius:6px;padding:2px 7px}
+.opts{display:flex;flex-wrap:wrap;gap:4px}
+.opt{font-size:11.5px;background:#f0f3f7;color:var(--ink2);border-radius:5px;padding:2px 6px}
+.opt.none{color:var(--ink3)}
+.colors{display:flex;gap:12px;font-size:12.5px;color:var(--ink2);flex-wrap:wrap}
+.colors span{display:inline-flex;align-items:center;gap:5px}
+.dot{width:13px;height:13px;border-radius:50%;border:1px solid rgba(0,0,0,.18);display:inline-block;flex:none}
+.note{font-size:12px;color:#b4232a;background:#fdf0f0;border-radius:7px;padding:5px 8px;line-height:1.45}
+.r3{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;border-top:1px dashed var(--line);padding-top:9px}
+.price{font-size:17px;font-weight:800;letter-spacing:-.3px}
+.price small{font-size:12px;font-weight:500;color:var(--ink3);margin-left:2px}
+.price s{font-size:12.5px;font-weight:500;color:var(--ink3);margin-right:6px}
+.meta{font-size:11.5px;color:var(--ink3);margin-top:3px;line-height:1.45}
+.disc{display:inline-block;font-size:12.5px;font-weight:800;color:#fff;background:var(--sale);border-radius:6px;padding:2px 8px;margin-bottom:5px}
+.hasd{display:inline-block;font-size:11.5px;font-weight:800;color:var(--sale);background:#fff1ec;border:1px solid #f6c4b3;border-radius:6px;padding:2px 7px;margin-bottom:5px;cursor:pointer}
+.ask{flex:none;border:0;background:#fee500;color:#191919;font-weight:700;font-size:13px;border-radius:9px;padding:8px 11px;cursor:pointer}
+.ask:active{transform:scale(.97)}
+[hidden]{display:none!important}
+.more{display:block;width:100%;border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:13px;font-weight:700;color:var(--ink2);cursor:pointer;margin:4px 0 30px}
+.empty{text-align:center;color:var(--ink3);padding:50px 10px;font-size:14px;line-height:1.7;grid-column:1/-1}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);opacity:0;background:#111;color:#fff;font-size:13.5px;padding:11px 16px;border-radius:12px;transition:.25s;z-index:50;max-width:92vw;text-align:center;line-height:1.5;pointer-events:none}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.modal{position:fixed;inset:0;background:rgba(0,20,45,.55);display:none;align-items:flex-end;justify-content:center;z-index:40}
+.modal.show{display:flex}
+.sheet{background:#fff;width:100%;max-width:520px;border-radius:18px 18px 0 0;padding:18px 16px 20px}
+.sheet h3{font-size:15px;margin-bottom:10px}
+.sheet textarea{width:100%;height:190px;border:1.5px solid var(--line);border-radius:10px;padding:10px;font-size:13.5px;line-height:1.55;resize:none;font-family:inherit}
+.sheet .btns{display:flex;gap:8px;margin-top:10px}
+.sheet .btns button{flex:1;border:0;border-radius:10px;padding:12px;font-weight:700;cursor:pointer}
+.b-copy{background:#fee500;color:#191919}
+.b-close{background:#eef2f6;color:var(--ink2)}
+.hint{font-size:12px;color:var(--ink3);margin-top:8px;line-height:1.5}
+.loading{padding:60px 0;text-align:center;color:var(--ink3);grid-column:1/-1}
+.totop{position:fixed;right:14px;bottom:18px;z-index:30;width:46px;height:46px;border-radius:50%;border:0;background:var(--navy);color:#fff;font-size:18px;box-shadow:0 4px 14px rgba(0,0,0,.25);cursor:pointer;display:none}
+.totop.show{display:block}
+</style>
+</head>
+<body>
+<header class="top" id="top">
+  <div class="wrap">
+    <div class="hd">
+      <h1><span id="ttl">현대 재고조회</span><a class="pill tel" id="tel" hidden>📞 전화문의</a><a class="pill kko" id="kko" target="_blank" rel="noopener" hidden>💬 카톡</a><small id="sub"></small></h1>
+      <div class="upd">업데이트<br><b id="upd">-</b></div>
+    </div>
+    <div class="tabs" id="tabs">
+      <button class="tab" data-k="now">✅ 즉시출고<span id="c-now">-</span></button>
+      <button class="tab" data-k="sale">🔥 할인재고<span id="c-sale">-</span></button>
+    </div>
+  </div>
+</header>
+<div class="bar">
+  <div class="wrap">
+    <div class="search">
+      <input id="q" type="search" placeholder="검색: 예) 캘리그래피 하이브리드 / 어비스 선루프" autocomplete="off">
+      <button class="clr" id="reset">초기화</button>
+    </div>
+    <div class="brand" id="brand">
+      <button data-b="" class="on">전체</button><button data-b="h">현대</button><button data-b="g">제네시스</button>
+    </div>
+    <div class="chips" id="models"></div>
+    <div class="filters">
+      <select id="fExt"><option value="">외장색상 전체</option></select>
+      <select id="fFuel"><option value="">연료 전체</option></select>
+      <select id="fSort">
+        <option value="def">기본 순서</option>
+        <option value="pa">가격 낮은순</option>
+        <option value="pd">가격 높은순</option>
+        <option value="sd">할인 큰순</option>
+        <option value="qd">수량 많은순</option>
+      </select>
+    </div>
+    <div class="keyf" id="keyf"><span>선택한 사양의 할인재고만 보는 중</span><button id="keyx">✕ 해제</button></div>
+  </div>
+</div>
+<main class="wrap">
+  <div class="sum" id="sum"></div>
+  <div class="list" id="list"><div class="loading">재고를 불러오는 중…</div></div>
+  <button class="more" id="more" hidden>더 보기</button>
+</main>
+
+<div class="modal" id="modal">
+  <div class="sheet">
+    <h3>문의 문구</h3>
+    <textarea id="msg"></textarea>
+    <div class="btns"><button class="b-close" id="mClose">닫기</button><button class="b-copy" id="mCopy">복사하기</button></div>
+    <p class="hint">복사해서 담당자 카톡·문자에 붙여넣기 하시면 바로 확인해드립니다.</p>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<button class="totop" id="totop" aria-label="맨 위로">▲</button>
+
+<script>
+(function(){
+const C=window.CONFIG||{};
+const $=id=>document.getElementById(id);
+$('ttl').textContent=C.title||'현대 재고조회';$('sub').textContent=C.sub||'';document.title=(C.title||'현대 재고조회');
+if(C.phone){$('tel').hidden=false;$('tel').href='tel:'+C.phone.replace(/[^0-9+]/g,'');$('tel').textContent='📞 '+C.phone;}
+if(C.kakao){$('kko').hidden=false;$('kko').href=C.kakao;}
+
+const TAB={now:'즉시출고',sale:'할인재고'};
+const COLOR={
+ '아틀라스화이트':'#f3f3f0','세레니티화이트펄':'#f1efe9','크리미화이트':'#eee9dc','우유니화이트':'#f2f2ef','마테호른화이트':'#ecedeb',
+ '어비스블랙펄':'#15171c','팬텀블랙펄':'#141414','비크블랙':'#111214','마우이블랙':'#17181a','에보니블랙':'#141414','블랙':'#161616',
+ '에코트로닉그레이펄':'#6f7377','녹턴그레이메탈릭':'#4c5054','녹턴그레이매트':'#4f5356','사이버그레이메탈릭':'#5d6266','마칼루그레이':'#7a7e80',
+ '바트나그레이':'#5e6366','드리프트우드그레이':'#8d8a84','랩터그레이매트':'#6d7072','아이언그레이메탈릭':'#5a5e62','셀라돈그레이':'#9aa39d',
+ '퀀텀실버펄':'#b8bcbf','에어로실버메탈릭':'#c2c5c7','세빌실버':'#b9bcbe','쉬머링실버메탈릭':'#c4c6c8',
+ '퍼포먼스블루':'#1f4fa0','트랜스미션블루':'#2a4f86','바이오필릭블루펄':'#2d5c74','코디악블루매트':'#5a7088','태즈먼블루':'#26405e',
+ '카프리블루':'#2c5a8c','세레스블루':'#3c5872','마티라블루':'#3a4d6b','메타블루펄':'#2b4373','클래지블루펄':'#283c62','루시드블루펄':'#3b6fa6',
+ '베링블루':'#2c4660','오닉스블루':'#1e2a3c','잉키블루':'#1d2840','아티스널버건디':'#5b1d2a','볼케닉레드펄':'#8f1d24','얼티메이트레드메탈릭':'#a01e2a',
+ '갤럭시마룬펄':'#4c1f26','그라펜그린펄':'#3a4f45','미라지그린':'#76857a','로버스트에메랄드펄':'#22493f','디지털틸그린펄':'#2e5f62',
+ '이오노스피어그린펄':'#4d6b5e','트롬소그린':'#3f5a4a','사이버세이지펄':'#8c9a8a','고요카퍼펄':'#8a5a3c','레드록오렌지매트':'#b5582c',
+ '타이탄차콜펄':'#3b3d40','캐스트아이언브라운펄':'#4a3a30','프로스티드브라운매트':'#7a6a5c','그래비티골드매트':'#8c7a58','슬레이트브라운':'#5d5048',
+ '세이셸베이지':'#cfc1a6','얼씨브레스메탈릭':'#a89a86','다이나믹옐로우':'#e9c12a',
+ '블랙원톤':'#1b1b1b','네이비투톤':'#25324d','카멜':'#a8743f','그레이':'#8c8f92','브라운':'#6b4a35','베이지':'#d4c3a3'
+};
+const ck=s=>(s||'').replace(/\s|\(.*?\)/g,'');
+function colorOf(n){const k=ck(n);if(COLOR[k])return COLOR[k];
+  for(const c in COLOR){if(k.includes(c)||c.includes(k)&&k.length>2)return COLOR[c];}
+  if(/화이트|아이보리/.test(k))return '#f2f1ec';if(/블랙|에보니/.test(k))return '#1b1b1b';if(/실버/.test(k))return '#bcbfc2';
+  if(/그레이|차콜/.test(k))return '#7d8185';if(/블루|네이비/.test(k))return '#2c4a72';if(/그린|세이지/.test(k))return '#4b6a55';
+  if(/레드|버건디|마룬/.test(k))return '#8f1d24';if(/브라운|카멜|코냑|탄/.test(k))return '#7a5236';if(/베이지|샌드/.test(k))return '#d4c3a3';
+  return '#c7ccd1';}
+function fuel(t){if(/수소/.test(t))return '수소';if(/전기/.test(t))return '전기';if(/하이브리드|HEV/i.test(t))return '하이브리드';
+  if(/LP/.test(t))return 'LPG';if(/디젤/.test(t))return '디젤';if(/가솔린|\dT\b|T-GDi/.test(t))return '가솔린';return '기타';}
+const won=n=>Math.round(n/10000).toLocaleString('ko-KR');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+let D=null,view=[],shown=0,GN=new Set();
+const S={tab:'now',brand:'',model:'',q:'',ext:'',fuel:'',sort:'def',key:''};
+const h0=location.hash.slice(1);if(TAB[h0])S.tab=h0;
+
+fetch('data.json',{cache:'no-store'}).then(r=>r.json()).then(d=>{
+  D=d;GN=new Set(d.genesis||[]);
+  for(const k of ['now','sale']){
+    (d[k]||[]).forEach((x,i)=>{x._i=i;x._f=fuel(x.t);x._g=GN.has(x.m);
+      x._s=(x.m+' '+x.t+' '+x.o+' '+x.e+' '+x.i+' '+x._f+' '+(x._g?'제네시스':'현대')).toLowerCase();x._s2=x._s.replace(/\s/g,'');});
+    $('c-'+k).textContent=(d[k]||[]).reduce((a,x)=>a+x.q,0).toLocaleString()+'대';
+  }
+  $('upd').textContent=(d.updated||'-').slice(5);
+  selectTab(S.tab,true);
+}).catch(()=>{$('list').innerHTML='<div class="empty">재고 데이터를 불러오지 못했습니다.<br>잠시 후 새로고침 해주세요.</div>';});
+
+function selectTab(k,keep){
+  S.tab=k;if(!keep){S.ext='';S.fuel='';if(k!=='sale')S.key='';}
+  document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',b.dataset.k===k));
+  try{history.replaceState(null,'','#'+k);}catch(e){}
+  buildModels();buildSelects();apply();
+}
+$('tabs').addEventListener('click',e=>{const b=e.target.closest('.tab');if(b)selectTab(b.dataset.k);});
+
+function rowsBase(){return D[S.tab]||[];}
+function buildModels(){
+  const cnt={},order=[];
+  rowsBase().forEach(x=>{if(S.brand==='h'&&x._g||S.brand==='g'&&!x._g)return;if(!(x.m in cnt)){cnt[x.m]=0;order.push(x.m);}cnt[x.m]+=x.q;});
+  if(S.model&&!(S.model in cnt))S.model='';
+  const tot=Object.values(cnt).reduce((a,b)=>a+b,0);
+  $('models').innerHTML=`<button class="chip ${S.model?'':'on'}" data-m="">전체<em>${tot.toLocaleString()}</em></button>`+
+    order.map(m=>`<button class="chip ${GN.has(m)?'gn':''} ${S.model===m?'on':''}" data-m="${esc(m)}">${esc(m)}<em>${cnt[m].toLocaleString()}</em></button>`).join('');
+}
+$('brand').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;S.brand=b.dataset.b;S.model='';S.ext='';
+  document.querySelectorAll('#brand button').forEach(x=>x.classList.toggle('on',x===b));buildModels();buildSelects();apply();});
+$('models').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;S.model=b.dataset.m;S.ext='';
+  document.querySelectorAll('#models .chip').forEach(c=>c.classList.toggle('on',c===b));buildSelects();apply();
+  const y=$('sum').getBoundingClientRect().top+scrollY-$('top').offsetHeight-4;if(scrollY>y)scrollTo({top:y});});
+
+function inScope(x){return (!S.model||x.m===S.model)&&!(S.brand==='h'&&x._g)&&!(S.brand==='g'&&!x._g);}
+function buildSelects(){
+  const ex={},fu={};
+  rowsBase().filter(inScope).forEach(x=>{const k=ck(x.e);ex[k]=ex[k]||{n:x.e,c:0};ex[k].c+=x.q;fu[x._f]=(fu[x._f]||0)+x.q;});
+  if(S.ext&&!ex[S.ext])S.ext='';if(S.fuel&&!fu[S.fuel])S.fuel='';
+  $('fExt').innerHTML='<option value="">외장색상 전체</option>'+Object.entries(ex).sort((a,b)=>b[1].c-a[1].c)
+    .map(([k,v])=>`<option value="${esc(k)}" ${S.ext===k?'selected':''}>${esc(v.n)} (${v.c})</option>`).join('');
+  $('fFuel').innerHTML='<option value="">연료 전체</option>'+Object.entries(fu).sort((a,b)=>b[1]-a[1])
+    .map(([k,v])=>`<option value="${k}" ${S.fuel===k?'selected':''}>${k} (${v})</option>`).join('');
+  const so=$('fSort');so.querySelector('[value=sd]').hidden=S.tab!=='sale';
+  if(S.tab!=='sale'&&S.sort==='sd')S.sort='def';so.value=S.sort;
+}
+$('fExt').onchange=e=>{S.ext=e.target.value;apply();};
+$('fFuel').onchange=e=>{S.fuel=e.target.value;apply();};
+$('fSort').onchange=e=>{S.sort=e.target.value;apply();};
+let tmr;$('q').addEventListener('input',e=>{clearTimeout(tmr);tmr=setTimeout(()=>{S.q=e.target.value;apply();},150);});
+$('reset').onclick=()=>{Object.assign(S,{brand:'',model:'',q:'',ext:'',fuel:'',sort:'def',key:''});$('q').value='';
+  document.querySelectorAll('#brand button').forEach(x=>x.classList.toggle('on',!x.dataset.b));buildModels();buildSelects();apply();};
+$('keyx').onclick=()=>{S.key='';apply();};
+
+function apply(){
+  const words=S.q.toLowerCase().trim().split(/\s+/).filter(Boolean);
+  view=rowsBase().filter(x=>inScope(x)&&(!S.ext||ck(x.e)===S.ext)&&(!S.fuel||x._f===S.fuel)&&(!S.key||x.k===S.key)&&
+    words.every(w=>x._s.includes(w)||x._s2.includes(w)));
+  const f={pa:(a,b)=>a.p-b.p,pd:(a,b)=>b.p-a.p,sd:(a,b)=>(b.s||0)-(a.s||0)||a.p-b.p,qd:(a,b)=>b.q-a.q}[S.sort];
+  view.sort(f||((a,b)=>a._i-b._i));
+  $('keyf').classList.toggle('show',!!S.key&&S.tab==='sale');
+  const n=view.reduce((a,x)=>a+x.q,0);
+  $('sum').innerHTML=`<span>${TAB[S.tab]}${S.model?' · '+esc(S.model):''}</span><span><b>${n.toLocaleString()}</b>대 · ${view.length.toLocaleString()}개 사양</span>`;
+  shown=0;$('list').innerHTML='';more();
+}
+function discLine(x){const p=[];if(x.sm)p.push('생산월 '+won(x.sm));if(x.ss)p.push('특별 '+won(x.ss));if(x.sb)p.push('기본 '+won(x.sb));if(x.sl)p.push('한정 '+won(x.sl));
+  return p.length?'할인내역: '+p.join(' · ')+'만원':'';}
+function card(x){
+  const opts=x.o==='무옵션'?'<span class="opt none">무옵션</span>':x.o.split(',').map(s=>s.trim()).filter(Boolean).map(o=>`<span class="opt">${esc(o)}</span>`).join('');
+  let top='',price=`<div class="price">${won(x.p)}<small>만원</small></div>`,meta='';
+  if(S.tab==='sale'){
+    if(x.s){top=`<span class="disc">할인 ${won(x.s)}만원</span>`;price=`<div class="price"><s>${won(x.p)}</s>${won(x.p-x.s)}<small>만원</small></div>`;}
+    meta=discLine(x);
+  }else if(x.ds){top=`<span class="hasd" data-k="${esc(x.k)}">🔥 같은 사양 할인재고 ${x.ds[0]}대 · 최대 ${won(x.ds[1])}만원 ›</span>`;}
+  const qty=`<span class="qty">${x.q}대</span>`;
+  return `<article class="card">
+    <div class="r1"><span class="model ${x._g?'gn':''}">${esc(x.m)}</span><div class="trim">${esc(x.t)}</div>${qty}</div>
+    <div class="opts">${opts}</div>
+    <div class="colors"><span><i class="dot" style="background:${colorOf(x.e)}"></i>외장 ${esc(x.e)}</span><span><i class="dot" style="background:${colorOf(x.i)}"></i>내장 ${esc(x.i)}</span></div>
+    ${x.n?`<div class="note">⚠ ${esc(x.n)}</div>`:''}
+    <div class="r3"><div>${top?'<div>'+top+'</div>':''}${price}${meta?'<div class="meta">'+meta+'</div>':''}</div>
+    <button class="ask" data-i="${x._i}">💬 문의</button></div>
+  </article>`;
+}
+function more(){
+  const next=view.slice(shown,shown+40);shown+=next.length;
+  if(!view.length)$('list').innerHTML='<div class="empty">조건에 맞는 재고가 없습니다.<br>검색어나 필터를 바꿔보세요.</div>';
+  else $('list').insertAdjacentHTML('beforeend',next.map(card).join(''));
+  $('more').hidden=shown>=view.length;$('more').textContent=`더 보기 (${(view.length-shown).toLocaleString()}개 남음)`;
+}
+$('more').onclick=more;
+if('IntersectionObserver' in window)new IntersectionObserver(es=>{if(es[0].isIntersecting&&!$('more').hidden)more();},{rootMargin:'400px'}).observe($('more'));
+addEventListener('scroll',()=>$('totop').classList.toggle('show',scrollY>500),{passive:true});
+$('totop').onclick=()=>scrollTo({top:0,behavior:'smooth'});
+
+$('list').addEventListener('click',e=>{
+  const h=e.target.closest('.hasd');
+  if(h){S.key=h.dataset.k;S.q='';$('q').value='';selectTab('sale',true);scrollTo({top:0});return;}
+  const b=e.target.closest('.ask');if(!b)return;
+  const x=D[S.tab][+b.dataset.i];
+  let t=`[재고문의 · ${TAB[S.tab]}]\n차종: ${x.m} ${x.t}\n옵션: ${x.o}\n색상: ${x.e} / ${x.i}\n가격: ${won(x.p)}만원`;
+  if(S.tab==='sale'&&x.s){t+=`\n할인: ${won(x.s)}만원 → ${won(x.p-x.s)}만원`;const dl=discLine(x);if(dl)t+=`\n(${dl})`;}
+  if(x.n)t+=`\n비고: ${x.n}`;
+  t+=`\n(재고기준 ${D.updated})\n\n고객명: \n요청사항: 출고 가능한지 확인 부탁드립니다.`;
+  $('msg').value=t;$('modal').classList.add('show');});
+$('mClose').onclick=()=>$('modal').classList.remove('show');
+$('modal').addEventListener('click',e=>{if(e.target.id==='modal')$('modal').classList.remove('show');});
+$('mCopy').onclick=async()=>{const t=$('msg').value;let ok=false;
+  try{await navigator.clipboard.writeText(t);ok=true;}catch(e){}
+  if(!ok){try{$('msg').select();ok=document.execCommand('copy');}catch(e){}}
+  toast(ok?'복사됐습니다. 카톡에 붙여넣기 해주세요 👍':'문구를 길게 눌러 직접 복사해주세요');
+  if(ok)$('modal').classList.remove('show');};
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2200);}
+})();
+</script>
+</body>
+</html>
